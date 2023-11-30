@@ -13,24 +13,17 @@ def query(payload):
 
 def extract_and_highlight_code(text):
     # Regular expression to detect code blocks in Markdown
-    code_blocks = re.split(r'(```[^\n]*\n.*?\n```)', text, flags=re.DOTALL)
+    code_blocks = re.split(r'(```[^\n]*\n.*?\n```|`[^`\n]+`)', text, flags=re.DOTALL)
 
     for part in code_blocks:
-        if part.startswith("```"):
-            # Code block found, process and highlight
+        if part.startswith("`"):
+            # Single backtick code block found, process and highlight inline
             code_block = part.strip('`')
-            # Extract language for syntax highlighting
-            language = code_block.split('\n', 1)[0].strip()
-
-            # Get lexer by language name
-            lexer = get_lexer_by_name(language, stripall=True)
-
-            # Highlight the code block
-            highlighted_code = highlight(code_block, lexer, Terminal256Formatter())
-            print(highlighted_code)
+            highlighted_code = highlight(code_block, get_lexer_by_name('python'), Terminal256Formatter(style='default'))
+            print(highlighted_code, end="")
         else:
-            # Non-code text, print as it is
-            print(part)
+            # Double backtick code block or non-code text, print as it is
+            print(part, end="")
 
 def main():
     if len(sys.argv) < 2:
