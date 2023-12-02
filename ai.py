@@ -1,5 +1,6 @@
 import sys
 import requests
+import pyperclip
 from rich import print
 from rich.markdown import Markdown
 from rich.console import Console
@@ -19,10 +20,12 @@ def main():
     output = query({"question": question})
 
     text = output["text"]
-    console = Console()
     better_text = Markdown(text)
     print("\n")
     print(better_text)
+    print()
+    pyperclip.copy(text)
+    print("[bold]Raw text copied to clipboard.[/bold]")
 
 if __name__ == "__main__":
     main()
