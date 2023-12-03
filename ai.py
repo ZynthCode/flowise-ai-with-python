@@ -5,10 +5,15 @@ import pyperclip
 from rich import print
 from rich.markdown import Markdown
 from file_util import FileUtil
+from rich.console import Console
+from rich.align import Align
+from rich.layout import Layout
+from rich.live import Live
+from rich.text import Text
+
 
 from session_manager import SessionManager
 
-# API_URL = "http://localhost:3000/api/v1/prediction/dc866a6c-41bb-49b4-aa0f-e4c0adbecd53" # API pointing to our locally running flowise API
 API_URL = "http://localhost:3000/api/v1/prediction/fd62cfc9-a1b7-479b-acb4-712ac6a01f3a"
 
 def query(payload):
@@ -20,7 +25,33 @@ def main():
     chat_id = str(uuid.uuid4()) 
     history = []
 
-    print("Welcome! Ask me anything. Type 'exit' to quit.")
+    layout = Layout()
+    layout.split_row(
+        Layout(name="left", size=30),
+        Layout(name="right"),
+    )
+    layout["left"].update(
+        Align.left(
+            Text(
+                text="Overlord AI Terminal Chat",
+                style="bold red on black"
+            )
+        )
+    )
+    layout["right"].update(
+        Align.left(
+            Text(
+                text="Please ask me anything. Type 'exit' to quit.",
+                
+            )
+        )
+    )
+    console = Console()
+    console.print(layout)
+
+
+    print("-----")
+    console.print("[bold][underscore][red]AI:[/red][/underscore][/bold] \t\t\tWelcome! Ask me anything. Type 'exit' to quit.", style="bold purple on black")
     while True:
         question = input("Your question: ")
         if question.lower() == 'exit':

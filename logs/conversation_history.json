@@ -52,5 +52,17 @@
       "type": "apiMessage",
       "message": "Certainly! Your previous question was, \"Tell me about the moon and stars.\""
     }
+  ],
+  "ee060792-9719-41f5-8a41-353ff99335d5": [
+    {
+      "timestamp": "2023-12-03 15:43:49",
+      "type": "userMessage",
+      "message": "clear"
+    },
+    {
+      "timestamp": "2023-12-03 15:43:49",
+      "type": "apiMessage",
+      "message": "Hello! How can I assist you today?"
+    }
   ]
 }
