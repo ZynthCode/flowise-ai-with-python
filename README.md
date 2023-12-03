@@ -8,9 +8,16 @@ We created our own python script that allows us to ask questions from the termin
 
 - You need to have [Flowise AI running locally](https://github.com/FlowiseAI/Flowise) in order for these to work. This is because we use Flowise AI API in our backend.
 
+Run it:
 ```bash
-python ./ai.py "Show me code example of using @SpringBootApplication annotation in Kotlin, and compare it with Java"
+python ./ai.py 
 ```
+
+Ask questions!
+
+### Conversation Logs
+
+You can find conversation logs in /logs relative to where you placed the ai.py code
 
 ## Dependencies
 
