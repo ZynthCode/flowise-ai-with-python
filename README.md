@@ -16,6 +16,7 @@ python ./ai.py "Show me code example of using @SpringBootApplication annotation 
 
 ```bash
 pip install rich
+pip install pyperclip
 ```
 
 ## Code Example
