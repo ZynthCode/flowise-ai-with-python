@@ -7,17 +7,26 @@ class SessionManager:
         self.file_path = file_path
 
     def create_chat(self, chat_id: str, history: list):
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = self._read_file()
         if chat_id not in data:
             data[chat_id] = []
-        
-        # Add only new conversations
+
+        message = []
+        for msg in data[chat_id]:
+            message.append(msg["message"])
+
+
+        new_messages = []
         for msg in history:
-            if msg not in data[chat_id]: 
-                msg_with_timestamp = {"timestamp": timestamp, **msg}
-                data[chat_id].append(msg_with_timestamp)
-        
+            if msg["message"] not in message:
+                new_messages.append(msg)
+
+        # Add new filtered messages to the conversation history
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        for msg in new_messages:
+            msg_with_timestamp = {"timestamp": timestamp, **msg}
+            data[chat_id].append(msg_with_timestamp)
+
         self._write_file(data)
 
     def get_chat(self, chat_id: str) -> List[Dict[str, str]]:
