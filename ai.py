@@ -1,15 +1,9 @@
-import sys
 import uuid
 import requests
 import pyperclip
 from rich import print
 from rich.markdown import Markdown
-from file_util import FileUtil
 from rich.console import Console
-from rich.align import Align
-from rich.layout import Layout
-from rich.live import Live
-from rich.text import Text
 
 
 from session_manager import SessionManager
@@ -25,54 +19,33 @@ def main():
     chat_id = str(uuid.uuid4()) 
     history = []
 
-    layout = Layout()
-    layout.split_row(
-        Layout(name="left", size=30),
-        Layout(name="right"),
-    )
-    layout["left"].update(
-        Align.left(
-            Text(
-                text="Overlord AI Terminal Chat",
-                style="bold red on black"
-            )
-        )
-    )
-    layout["right"].update(
-        Align.left(
-            Text(
-                text="Please ask me anything. Type 'exit' to quit.",
-                
-            )
-        )
-    )
     console = Console()
-    console.print(layout)
-
-
-    print("-----")
-    console.print("[bold][underscore][red]AI:[/red][/underscore][/bold] \t\t\tWelcome! Ask me anything. Type 'exit' to quit.", style="bold purple on black")
+    print()
+    console.print("Welcome! Ask me anything. Type 'exit' to quit.\n", style="bold")
     while True:
-        question = input("Your question: ")
-        if question.lower() == 'exit':
+        console.print("\n\n\nYou\n",  style="bold purple on black")
+        question = input("> ")
+    
+        if question.lower() == "exit" or question.lower() == "clear":
             print("Goodbye!")
             break
-
-        output = query({"question": question, "history": history})
-        answer = output["text"]
-
+        
+        console.print("\n\n\nAI\n",  style="bold red on black")
+        answer = ""
+        with console.status("[bold green]AI is thinking...") as status:
+            output = query({"question": question, "history": history})
+            answer = output["text"]
+    
         formatted_answer = Markdown(answer)
-        print("\n")
         print(formatted_answer)
-        print()
-        pyperclip.copy(answer)
-        print("[bold]Raw answer copied to clipboard.[/bold]")
 
-        history.append({"type": "userMessage", "message": question})
-        history.append({"type": "apiMessage", "message": answer})
+        pyperclip.copy(answer)
+        print("\n[bold]Raw answer copied to clipboard.[/bold]")
+
+        history.append({"id": str(uuid.uuid4()), "type": "userMessage", "message": question})
+        history.append({"id": str(uuid.uuid4()), "type": "apiMessage", "message": answer})
 
         session_manager.create_chat(chat_id, history) 
-
 
 if __name__ == "__main__":
     main()
