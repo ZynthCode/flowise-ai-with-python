@@ -6,6 +6,8 @@ We created our own python script that allows us to ask questions from the termin
 
 ## Usage
 
+- You need to have [Flowise AI running locally](https://github.com/FlowiseAI/Flowise) in order for these to work. This is because we use Flowise AI API in our backend.
+
 ```bash
 python ./ai.py "Show me code example of using @SpringBootApplication annotation in Kotlin, and compare it with Java"
 ```
@@ -16,6 +18,7 @@ python ./ai.py "Show me code example of using @SpringBootApplication annotation 
 
 ```bash
 pip install rich
+pip install pyperclip
 ```
 
 ## Code Example

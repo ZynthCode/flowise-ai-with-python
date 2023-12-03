@@ -1,31 +1,51 @@
-import sys
+import uuid
 import requests
 import pyperclip
 from rich import print
 from rich.markdown import Markdown
 from rich.console import Console
 
-API_URL = "http://localhost:3000/api/v1/prediction/dc866a6c-41bb-49b4-aa0f-e4c0adbecd53" # API pointing to our locally running flowise API
+
+from session_manager import SessionManager
+
+API_URL = "http://localhost:3000/api/v1/prediction/fd62cfc9-a1b7-479b-acb4-712ac6a01f3a"
 
 def query(payload):
     response = requests.post(API_URL, json=payload)
     return response.json()
 
 def main():
-    if len(sys.argv) < 2:
-        print("Please provide a question!")
-        return
+    session_manager = SessionManager("logs/conversation_history.json")
+    chat_id = str(uuid.uuid4()) 
+    history = []
 
-    question = ' '.join(sys.argv[1:])
-    output = query({"question": question})
-
-    text = output["text"]
-    better_text = Markdown(text)
-    print("\n")
-    print(better_text)
+    console = Console()
     print()
-    pyperclip.copy(text)
-    print("[bold]Raw text copied to clipboard.[/bold]")
+    console.print("Welcome! Ask me anything. Type 'exit' to quit.\n", style="bold")
+    while True:
+        console.print("\n\n\nYou\n",  style="bold purple on black")
+        question = input("> ")
+    
+        if question.lower() == "exit" or question.lower() == "clear":
+            print("Goodbye!")
+            break
+        
+        console.print("\n\n\nAI\n",  style="bold red on black")
+        answer = ""
+        with console.status("[bold green]AI is thinking...") as status:
+            output = query({"question": question, "history": history})
+            answer = output["text"]
+    
+        formatted_answer = Markdown(answer)
+        print(formatted_answer)
+
+        pyperclip.copy(answer)
+        print("\n[bold]Raw answer copied to clipboard.[/bold]")
+
+        history.append({"id": str(uuid.uuid4()), "type": "userMessage", "message": question})
+        history.append({"id": str(uuid.uuid4()), "type": "apiMessage", "message": answer})
+
+        session_manager.create_chat(chat_id, history) 
 
 if __name__ == "__main__":
     main()
